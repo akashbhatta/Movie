@@ -105,12 +105,12 @@ function MovieApp() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-5">
 
         {/* Heading */}
-        <h1 className="text-4xl md:text-5xl font-bold text-center text-white mb-6">
+        {/* <h1 className="text-4xl md:text-5xl font-bold text-center text-white mb-6">
           🎬 Movie Finder
-        </h1>
+        </h1> */}
 
         {/* Search Bar */}
-        <div className="flex flex-col sm:flex-row justify-center gap-3 mb-5">
+        {/* <div className="flex flex-col sm:flex-row justify-center gap-3 mb-5">
       
           
           <input
@@ -131,7 +131,7 @@ function MovieApp() {
           >
             Search
           </button>
-        </div>
+        </div> */}
         <Trending/>
 
         {/* Loading */}

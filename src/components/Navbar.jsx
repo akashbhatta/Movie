@@ -17,7 +17,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-gray-900 border-b border-yellow-500 shadow-lg">
+    <nav className="sticky top-0 z-50 bg-gradient-to-r from-black via-gray-900 to-black border-b border-gray-800 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Navbar Content */}
@@ -26,9 +26,10 @@ function Navbar() {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-2 text-2xl font-bold text-yellow-400 hover:text-yellow-300 transition"
+            className="flex items-center gap-2 text-2xl font-extrabold text-white hover:text-yellow-400 transition duration-200"
           >
-            🎬 <span>MovieFinder</span>
+            <span className="text-yellow-400">b</span><span>flix</span>
+            <span className="text-yellow-400 text-3xl ml-1">✕</span>
           </Link>
 
           {/* Desktop Menu */}
@@ -36,10 +37,10 @@ function Navbar() {
             <NavLink
               to="/"
               className={({ isActive }) =>
-                `text-lg font-medium transition ${
+                `text-sm font-medium transition duration-200 ${
                   isActive
-                    ? "text-yellow-400 border-b-2 border-yellow-400 pb-1"
-                    : "text-white hover:text-yellow-400"
+                    ? "text-yellow-400"
+                    : "text-gray-300 hover:text-white"
                 }`
               }
             >
@@ -49,43 +50,44 @@ function Navbar() {
             <NavLink
               to="/about"
               className={({ isActive }) =>
-                `text-lg font-medium transition ${
+                `text-sm font-medium transition duration-200 ${
                   isActive
-                    ? "text-yellow-400 border-b-2 border-yellow-400 pb-1"
-                    : "text-white hover:text-yellow-400"
+                    ? "text-yellow-400"
+                    : "text-gray-300 hover:text-white"
                 }`
               }
             >
               About
             </NavLink>
+
             <NavLink
               to="/topRated"
-              onClick={() => setMenuOpen(false)}
               className={({ isActive }) =>
-                `block px-2 text-lg ${
+                `text-sm font-medium transition duration-200 ${
                   isActive
-                    ? "text-yellow-400 font-semibold"
-                    : "text-white hover:text-yellow-400"
+                    ? "text-yellow-400"
+                    : "text-gray-300 hover:text-white"
                 }`
               }
             >
-              Top Rated
+              Top IMDB
             </NavLink>
+
             {/* Dropdown */}
             <div className="relative group">
-              <button className="flex items-center gap-1 text-lg font-medium text-white group-hover:text-yellow-400 transition">
+              <button className="flex items-center gap-1 text-sm font-medium text-gray-300 group-hover:text-white transition duration-200">
                 Categories <span>▾</span>
               </button>
 
-              <div className="absolute left-0 hidden group-hover:block bg-gray-800 border border-yellow-500 rounded-lg shadow-xl py-2 min-w-45">
+              <div className="absolute left-0 hidden group-hover:block bg-gray-900 border border-gray-700 rounded-lg shadow-xl py-2 min-w-40">
                 
                 <NavLink
                   to="/category/action"
                   className={({ isActive }) =>
-                    `block px-4 py-2 transition ${
+                    `block px-4 py-2 text-sm transition duration-200 ${
                       isActive
                         ? "bg-yellow-400 text-black font-semibold"
-                        : "text-white hover:bg-yellow-400 hover:text-black"
+                        : "text-gray-300 hover:bg-yellow-400 hover:text-black"
                     }`
                   }
                 >
@@ -95,89 +97,105 @@ function Navbar() {
                 <NavLink
                   to="/category/drama"
                   className={({ isActive }) =>
-                    `block px-4 py-2 transition ${
+                    `block px-4 py-2 text-sm transition duration-200 ${
                       isActive
                         ? "bg-yellow-400 text-black font-semibold"
-                        : "text-white hover:bg-yellow-400 hover:text-black"
+                        : "text-gray-300 hover:bg-yellow-400 hover:text-black"
                     }`
                   }
                 >
                   Drama
                 </NavLink>
-                
               </div>
-
-              
             </div>
           </div>
 
           {/* Desktop Search */}
           <form
-            className="hidden md:flex items-center gap-2"
+            className="hidden md:flex items-center gap-3"
             onSubmit={handleSearch}
           >
-            <input
-              type="text"
-              placeholder="Search movies..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            />
-            <button
-              type="submit"
-              className="px-5 py-2 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-300 transition active:scale-95"
-            >
-              Search
-            </button>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Enter keywords..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="px-4 py-2 rounded-full bg-gray-900 text-white border border-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-200 text-sm"
+              />
+              <button
+                type="submit"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-yellow-400 transition"
+              >
+                🔍
+              </button>
+            </div>
           </form>
+
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-3xl text-white hover:text-yellow-400 transition"
+            className="md:hidden text-2xl text-white hover:text-yellow-400 transition"
             onClick={() => setMenuOpen(!menuOpen)}
           >
-          {menuOpen ? "✕" : "☰"}
+            {menuOpen ? "✕" : "☰"}
           </button>
         </div>
+
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="md:hidden bg-gray-800 border-t border-gray-700 py-4 space-y-4">            
+          <div className="md:hidden bg-gray-900 border-t border-gray-800 py-4 space-y-4">            
             <NavLink
               to="/"
               onClick={() => setMenuOpen(false)}
               className={({ isActive }) =>
-                `block px-2 text-lg ${
+                `block px-4 py-2 text-sm ${
                   isActive
                     ? "text-yellow-400 font-semibold"
-                    : "text-white hover:text-yellow-400"
+                    : "text-gray-300 hover:text-white"
                 }`
               }
             >
-              Home
+              Movies
             </NavLink>
 
             <NavLink
-              to="/about"
+              to="/topRated"
               onClick={() => setMenuOpen(false)}
               className={({ isActive }) =>
-                `block px-2 text-lg ${
+                `block px-4 py-2 text-sm ${
                   isActive
                     ? "text-yellow-400 font-semibold"
-                    : "text-white hover:text-yellow-400"
+                    : "text-gray-300 hover:text-white"
                 }`
               }
             >
-              About
+              TV Shows
             </NavLink>
+
+            <NavLink
+              to="/topRated"
+              onClick={() => setMenuOpen(false)}
+              className={({ isActive }) =>
+                `block px-4 py-2 text-sm ${
+                  isActive
+                    ? "text-yellow-400 font-semibold"
+                    : "text-gray-300 hover:text-white"
+                }`
+              }
+            >
+              Top IMDB
+            </NavLink>
+
             {/* Mobile Categories */}
-            <div className="border-t border-gray-700 pt-4">
-              <p className="text-yellow-400 font-semibold mb-2 px-2">
+            <div className="border-t border-gray-800 pt-4">
+              <p className="text-yellow-400 font-semibold mb-2 px-4 text-sm">
                 Categories
               </p>
 
               <NavLink
                 to="/category/action"
                 onClick={() => setMenuOpen(false)}
-                className="block px-4 py-2 text-white hover:text-yellow-400"
+                className="block px-4 py-2 text-sm text-gray-300 hover:text-yellow-400 transition"
               >
                 Action
               </NavLink>
@@ -185,43 +203,30 @@ function Navbar() {
               <NavLink
                 to="/category/drama"
                 onClick={() => setMenuOpen(false)}
-                className="block px-4 py-2 text-white hover:text-yellow-400"
+                className="block px-4 py-2 text-sm text-gray-300 hover:text-yellow-400 transition"
               >
                 Drama
               </NavLink>
             </div>
-             
-            <NavLink
-              to="/about"
-              onClick={() => setMenuOpen(false)}
-              className={({ isActive }) =>
-                `block px-2 text-lg ${
-                  isActive
-                    ? "text-yellow-400 font-semibold"
-                    : "text-white hover:text-yellow-400"
-                }`
-              }
-            >
-              Top Rated
-            </NavLink>
+
             {/* Mobile Search */}
             <form
-              className="flex gap-2 px-2 pt-4 border-t border-gray-700"
+              className="flex gap-2 px-4 pt-4 border-t border-gray-800"
               onSubmit={handleSearch}
             >
               <input
                 type="text"
-                placeholder="Search movies..."
+                placeholder="Enter keywords..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="flex-1 px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                className="flex-1 px-4 py-2 rounded-full bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition text-sm"
               />
 
               <button
                 type="submit"
-                className="px-4 py-2 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-300 transition"
+                className="px-4 py-2 bg-yellow-400 text-black font-semibold rounded-full hover:bg-yellow-300 transition text-sm"
               >
-                Search
+                🔍
               </button>
             </form>
           </div>

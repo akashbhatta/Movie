@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+@keyframes moviePosterDrift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(50%);
+  }
+}
+
+.movie-poster-stream {
+  width: max-content;
+  will-change: transform;
+}
+
+.movie-poster-stream-slow {
+  animation: moviePosterDrift 58s linear infinite;
+}
+
+.movie-poster-stream-fast {
+  animation: moviePosterDrift 44s linear infinite reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .movie-poster-stream {
+    animation: none;
+  }
+}

@@ -11,6 +11,7 @@ import MediaDetailsPage from './pages/MediaDetailsPage'
 import TopRated from './components/TopRated'
 import Action from './components/Action'
 import Drama from './components/Drama'
+import Hero from './pages/Hero'
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
       <main className="grow">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path= "/hero" element = {<Hero/>}/>
           <Route path="/search/:query" element={<SearchPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/topRated" element={<TopRated />} />

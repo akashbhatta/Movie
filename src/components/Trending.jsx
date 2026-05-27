@@ -49,65 +49,6 @@ const Trending = ({ onSelectItem }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <h1 className="text-5xl font-bold text-white mb-8">🔥 Trending Now</h1>
-
-        {/* Media Type Toggle */}
-        {/* <div className="mb-8 flex flex-wrap gap-3">
-          <button
-            onClick={() => { setMediaType("all"); setSelectedItem(null); }}
-            className={`px-6 py-2 rounded-lg font-semibold transition-all ${
-              mediaType === "all"
-                ? "bg-accent text-black shadow-lg"
-                : "bg-primary text-white border border-accent hover:bg-accent"
-            }`}
-          >
-            All
-          </button>
-          <button
-            onClick={() => { setMediaType("movie"); setSelectedItem(null); }}
-            className={`px-6 py-2 rounded-lg font-semibold transition-all ${
-              mediaType === "movie"
-                ? "bg-accent text-black shadow-lg"
-                : "bg-primary text-white border border-accent hover:bg-accent"
-            }`}
-          >
-            🎬 Movies
-          </button>
-          <button
-            onClick={() => { setMediaType("tv"); setSelectedItem(null); }}
-            className={`px-6 py-2 rounded-lg font-semibold transition-all ${
-              mediaType === "tv"
-                ? "bg-accent text-black shadow-lg"
-                : "bg-primary text-white border border-accent hover:bg-accent"
-            }`}
-          >
-            📺 TV Shows
-          </button>
-        </div> */}
-
-        {/* Time Window Toggle */}
-        {/* <div className="mb-8 flex flex-wrap gap-3">
-          <button
-            onClick={() => setTimeWindow("day")}
-            className={`px-6 py-2 rounded-lg font-semibold transition-all ${
-              timeWindow === "day"
-                ? "bg-accent text-black shadow-lg"
-                : "bg-primary text-white border border-accent hover:bg-accent "
-            }`}
-          >
-            Today
-          </button>
-          <button
-            onClick={() => setTimeWindow("week")}
-            className={`px-6 py-2 rounded-lg font-semibold transition-all ${
-              timeWindow === "week"
-                ? "bg-accent text-black shadow-lg"
-                : "bg-primary text-white border border-accent hover:bg-accent "
-            }`}
-          >
-            This Week
-          </button>
-        </div> */}
-
         {/* Loading State */}
         {loading && <Loading />}
 
