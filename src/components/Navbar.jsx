@@ -28,7 +28,7 @@ function Navbar() {
             to="/"
             className="flex items-center gap-2 text-2xl font-extrabold text-white hover:text-yellow-400 transition duration-200"
           >
-            <span className="text-yellow-400">b</span><span>flix</span>
+            <span className="text-yellow-400">m</span><span>flix</span>
             <span className="text-yellow-400 text-3xl ml-1">✕</span>
           </Link>
 

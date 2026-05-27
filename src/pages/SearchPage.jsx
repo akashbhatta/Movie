@@ -68,7 +68,7 @@ function SearchPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <button 
             onClick={() => setSelectedMovieDetails(null)}
-            className="mb-8 px-6 py-2 bg-accent text-black font-semibold rounded-lg hover:bg-yellow-500 transition-colors flex items-center gap-2"
+            className="mb-8 px-6 py-2 bg-yellow-600 text-white font-semibold rounded-lg hover:bg-yellow-500 transition-colors flex items-center gap-2 cursor-pointer"
           >
             ← Back to Results
           </button>
