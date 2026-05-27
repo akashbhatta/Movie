@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading";
 
@@ -7,20 +8,16 @@ const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
 
 const Popularity = ({ onSelectShow }) => {
+  const navigate = useNavigate();
   const [shows, setShows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [query, setQuery] = useState("");
-  const [selectedShow, setSelectedShow] = useState(null);
   const [sortBy, setSortBy] = useState("popularity.desc");
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [genres, setGenres] = useState([]);
-
-//   useEffect(() => {
-//     fetchGenres();
-//   }, []);
 
   useEffect(() => {
     if (query.trim()) {
@@ -29,17 +26,6 @@ const Popularity = ({ onSelectShow }) => {
       fetchShows();
     }
   }, [page, sortBy, selectedGenre]);
-
-//   const fetchGenres = async () => {
-//     try {
-//       const res = await axios.get(`${BASE_URL}/genre/tv/list`, {
-//         params: { api_key: API_KEY },
-//       });
-//       setGenres(res.data.genres);
-//     } catch (err) {
-//       console.error("Error fetching TV genres:", err);
-//     }
-//   };
 
   const fetchShows = async () => {
     setLoading(true);
@@ -63,45 +49,8 @@ const Popularity = ({ onSelectShow }) => {
     }
   };
 
-//   const searchShows = async () => {
-//     if (!query.trim()) return;
-//     setLoading(true);
-//     setError("");
-//     try {
-//       const res = await axios.get(`${BASE_URL}/search/tv`, {
-//         params: { api_key: API_KEY, query, page },
-//       });
-//       if (res.data.results.length === 0) {
-//         setError("No TV shows found.");
-//         return;
-//       }
-//       setShows(res.data.results);
-//       setTotalPages(res.data.total_pages);
-//     } catch (err) {
-//       console.error("Search error:", err);
-//       setError("Something went wrong.");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-  const fetchShowDetails = async (id) => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`${BASE_URL}/tv/${id}`, {
-        params: {
-          api_key: API_KEY,
-          append_to_response: "credits,videos,similar",
-        },
-      });
-      setSelectedShow(res.data);
-      const el = document.getElementById("show-detail");
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    } catch (err) {
-      console.error("Error fetching show details:", err);
-    } finally {
-      setLoading(false);
-    }
+  const handleShowClick = (id) => {
+    navigate(`/media/tv/${id}`);
   };
 
   const handleSearch = () => {
@@ -119,10 +68,6 @@ const Popularity = ({ onSelectShow }) => {
     setSortBy(sort);
     setPage(1);
   };
-
-  const trailer = selectedShow?.videos?.results?.find(
-    (v) => v.type === "Trailer" && v.site === "YouTube"
-  );
 
   const getSortLabel = () => {
     const sortMap = {
@@ -376,130 +321,6 @@ const Popularity = ({ onSelectShow }) => {
         {/* Error State */}
         {error && <p className="text-center text-red-500 text-lg font-semibold my-8">{error}</p>}
 
-        {/* Show Detail Modal */}
-        {selectedShow && (
-          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 overflow-y-auto">
-            <div className="bg-primary rounded-lg shadow-2xl w-full max-w-4xl my-8">
-              <button
-                onClick={() => setSelectedShow(null)}
-                className="absolute top-4 right-4 text-white text-2xl hover:text-accent transition-colors bg-secondary px-3 py-1 rounded z-10"
-              >
-                ✕
-              </button>
-
-              <div id="show-detail" className="p-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                  {/* Poster */}
-                  <div className="md:col-span-1">
-                    <img
-                      src={
-                        selectedShow.poster_path
-                          ? `${IMG_URL}${selectedShow.poster_path}`
-                          : "/no-image.png"
-                      }
-                      alt={selectedShow.name}
-                      className="w-full rounded-lg shadow-lg"
-                    />
-                  </div>
-
-                  {/* Details */}
-                  <div className="md:col-span-2">
-                    <h2 className="text-3xl font-bold text-white mb-4">{selectedShow.name}</h2>
-                    <p className="text-gray-300 text-lg leading-relaxed mb-6">{selectedShow.overview}</p>
-
-                    <div className="space-y-3 text-sm md:text-base">
-                      <p className="text-gray-300">
-                        <strong className="text-accent">First Air Date:</strong> {selectedShow.first_air_date || "N/A"}
-                      </p>
-                      <p className="text-gray-300">
-                        <strong className="text-accent">Last Air Date:</strong> {selectedShow.last_air_date || "N/A"}
-                      </p>
-                      <p className="text-gray-300">
-                        <strong className="text-accent">Status:</strong> {selectedShow.status || "N/A"}
-                      </p>
-                      <p className="text-gray-300">
-                        <strong className="text-accent">Seasons:</strong> {selectedShow.number_of_seasons || "N/A"}
-                      </p>
-                      <p className="text-gray-300">
-                        <strong className="text-accent">Episodes:</strong> {selectedShow.number_of_episodes || "N/A"}
-                      </p>
-                      <p className="text-gray-300">
-                        <strong className="text-accent">Rating:</strong> ⭐ {selectedShow.vote_average?.toFixed(1)} / 10
-                      </p>
-                      <p className="text-gray-300">
-                        <strong className="text-accent">Genres:</strong> {selectedShow.genres?.map((g) => g.name).join(", ") || "N/A"}
-                      </p>
-                      <p className="text-gray-300">
-                        <strong className="text-accent">Networks:</strong> {selectedShow.networks?.map((n) => n.name).join(", ") || "N/A"}
-                      </p>
-                      <p className="text-gray-300">
-                        <strong className="text-accent">Language:</strong> {selectedShow.original_language?.toUpperCase() || "N/A"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Cast */}
-                {selectedShow.credits?.cast?.length > 0 && (
-                  <div className="mb-8">
-                    <h3 className="text-2xl font-bold text-accent mb-4">Top Cast:</h3>
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {selectedShow.credits.cast.slice(0, 6).map((actor) => (
-                        <li key={actor.id} className="text-gray-300">
-                          <span className="text-white font-semibold">{actor.name}</span> as{" "}
-                          <em className="text-accent">{actor.character}</em>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Trailer */}
-                {trailer && (
-                  <div className="mb-8">
-                    <h3 className="text-2xl font-bold text-accent mb-4">Trailer:</h3>
-                    <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-                      <iframe
-                        className="absolute top-0 left-0 w-full h-full rounded-lg"
-                        src={`https://www.youtube.com/embed/${trailer.key}`}
-                        title="TV Show Trailer"
-                        allowFullScreen
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Similar Shows */}
-                {selectedShow.similar?.results?.length > 0 && (
-                  <div>
-                    <h3 className="text-2xl font-bold text-accent mb-4">Similar Shows:</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                      {selectedShow.similar.results.slice(0, 10).map((show) => (
-                        <div
-                          key={show.id}
-                          onClick={() => fetchShowDetails(show.id)}
-                          className="cursor-pointer transform transition-transform hover:scale-105"
-                        >
-                          <img
-                            src={
-                              show.poster_path
-                                ? `${IMG_URL}${show.poster_path}`
-                                : "/no-image.png"
-                            }
-                            alt={show.name}
-                            className="w-full rounded-lg shadow-lg hover:shadow-2xl transition-shadow"
-                          />
-                          <p className="mt-2 text-white font-semibold text-sm line-clamp-2">{show.name}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Shows Grid */}
         {!loading && shows.length > 0 && (
           <div>
@@ -507,22 +328,22 @@ const Popularity = ({ onSelectShow }) => {
               {shows.map((show) => (
                 <div
                   key={show.id}
-                  onClick={() => fetchShowDetails(show.id)}
-                  className="cursor-pointer transform transition-transform hover:scale-105"
+                  onClick={() => handleShowClick(show.id)}
+                  className="cursor-pointer transform transition-all hover:scale-105 group rounded-xl overflow-hidden"
                 >
-                  <div className="relative group">
-                    <img
-                      src={
-                        show.poster_path
-                          ? `${IMG_URL}${show.poster_path}`
-                          : "/no-image.png"
-                      }
-                      alt={show.name}
-                      className="w-full rounded-lg shadow-lg group-hover:shadow-2xl transition-shadow"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-70 transition-all rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
-                      <div className="text-center">
-                        <p className="text-white text-sm">View Details</p>
+                  <div className="relative">
+                    <div className="relative h-64 md:h-72 overflow-hidden rounded-xl">
+                      <img
+                        src={
+                          show.poster_path
+                            ? `${IMG_URL}${show.poster_path}`
+                            : "/no-image.png"
+                        }
+                        alt={show.name}
+                        className="w-full h-full object-cover group-hover:brightness-75 transition-all shadow-lg"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <p className="text-white font-bold text-lg">View Details</p>
                       </div>
                     </div>
                   </div>
@@ -532,29 +353,6 @@ const Popularity = ({ onSelectShow }) => {
                 </div>
               ))}
             </div>
-
-            {/* Pagination */}
-            {/* {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-4 mt-12">
-                <button
-                  onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                  disabled={page === 1}
-                  className="px-6 py-2 bg-accent text-black font-semibold rounded-lg hover:bg-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  ← Previous
-                </button>
-                <span className="text-white font-semibold text-lg">
-                  Page <span className="text-accent">{page}</span> of <span className="text-accent">{totalPages}</span>
-                </span>
-                <button
-                  onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-                  disabled={page === totalPages}
-                  className="px-6 py-2 bg-accent text-black font-semibold rounded-lg hover:bg-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Next →
-                </button>
-              </div>
-            )} */}
           </div>
         )}
 

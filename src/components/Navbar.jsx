@@ -32,8 +32,7 @@ function Navbar() {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8">
-            
+          <div className="hidden md:flex items-center gap-8">           
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -124,7 +123,6 @@ function Navbar() {
               onChange={(e) => setSearch(e.target.value)}
               className="px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
-
             <button
               type="submit"
               className="px-5 py-2 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-300 transition active:scale-95"
@@ -132,20 +130,17 @@ function Navbar() {
               Search
             </button>
           </form>
-
           {/* Mobile Menu Button */}
           <button
             className="md:hidden text-3xl text-white hover:text-yellow-400 transition"
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            {menuOpen ? "✕" : "☰"}
+          {menuOpen ? "✕" : "☰"}
           </button>
         </div>
-
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="md:hidden bg-gray-800 border-t border-gray-700 py-4 space-y-4">
-            
+          <div className="md:hidden bg-gray-800 border-t border-gray-700 py-4 space-y-4">            
             <NavLink
               to="/"
               onClick={() => setMenuOpen(false)}
@@ -173,7 +168,6 @@ function Navbar() {
             >
               About
             </NavLink>
-
             {/* Mobile Categories */}
             <div className="border-t border-gray-700 pt-4">
               <p className="text-yellow-400 font-semibold mb-2 px-2">
@@ -189,19 +183,11 @@ function Navbar() {
               </NavLink>
 
               <NavLink
-                to="/category/comedy"
+                to="/category/drama"
                 onClick={() => setMenuOpen(false)}
                 className="block px-4 py-2 text-white hover:text-yellow-400"
               >
-                Comedy
-              </NavLink>
-
-              <NavLink
-                to="/category/horror"
-                onClick={() => setMenuOpen(false)}
-                className="block px-4 py-2 text-white hover:text-yellow-400"
-              >
-                Horror
+                Drama
               </NavLink>
             </div>
              

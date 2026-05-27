@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading";
 
@@ -10,13 +11,13 @@ const DRAMA_GENRE_ID = 18;
 const LIMIT = 10;
 
 const Drama = () => {
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [mediaType, setMediaType] = useState("movie");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
     fetchDrama();
@@ -25,7 +26,6 @@ const Drama = () => {
   const fetchDrama = async () => {
     setLoading(true);
     setError("");
-    setSelectedItem(null);
 
     try {
       const res = await axios.get(
@@ -49,41 +49,9 @@ const Drama = () => {
     }
   };
 
-  const fetchDetails = async (id) => {
-    setLoading(true);
-
-    try {
-      const res = await axios.get(
-        `${BASE_URL}/${mediaType}/${id}`,
-        {
-          params: {
-            api_key: API_KEY,
-            append_to_response:
-              "credits,videos,similar",
-          },
-        }
-      );
-
-      setSelectedItem({
-        ...res.data,
-        media_type: mediaType,
-      });
-    } catch (err) {
-      console.error(
-        "Error fetching details:",
-        err
-      );
-    } finally {
-      setLoading(false);
-    }
+  const handleItemClick = (id) => {
+    navigate(`/media/${mediaType}/${id}`);
   };
-
-  const trailer =
-    selectedItem?.videos?.results?.find(
-      (v) =>
-        v.type === "Trailer" &&
-        v.site === "YouTube"
-    );
 
   return (
     <div className="min-h-screen bg-gray-900 py-12">
@@ -146,182 +114,6 @@ const Drama = () => {
           </p>
         )}
 
-        {/* Detail Modal */}
-        {selectedItem && (
-
-          <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50 overflow-y-auto">
-
-            <div className="bg-primary rounded-2xl shadow-2xl w-full max-w-5xl relative">
-
-              <button
-                onClick={() =>
-                  setSelectedItem(null)
-                }
-                className="absolute top-4 right-4 text-white text-2xl hover:text-yellow-400 transition-colors bg-secondary px-3 py-1 rounded-lg z-10"
-              >
-                ✕
-              </button>
-
-              <div className="p-8">
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-
-                  {/* Poster */}
-                  <div>
-
-                    <img
-                      src={
-                        selectedItem.poster_path
-                          ? `${IMG_URL}${selectedItem.poster_path}`
-                          : "/no-image.png"
-                      }
-                      alt={
-                        selectedItem.title ||
-                        selectedItem.name
-                      }
-                      className="w-full rounded-xl shadow-2xl"
-                    />
-                  </div>
-
-                  {/* Details */}
-                  <div className="md:col-span-2">
-
-                    <h2 className="text-4xl font-bold text-white mb-4">
-                      {selectedItem.title ||
-                        selectedItem.name}
-                    </h2>
-
-                    <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                      {selectedItem.overview}
-                    </p>
-
-                    <div className="space-y-3 text-gray-300">
-
-                      <p>
-                        <strong className="text-yellow-400">
-                          Type:
-                        </strong>{" "}
-                        {selectedItem.media_type ===
-                        "movie"
-                          ? "🎬 Movie"
-                          : "📺 TV Show"}
-                      </p>
-
-                      <p>
-                        <strong className="text-yellow-400">
-                          Rating:
-                        </strong>{" "}
-                        ⭐{" "}
-                        {selectedItem.vote_average?.toFixed(
-                          1
-                        )}{" "}
-                        / 10
-                      </p>
-
-                      <p>
-                        <strong className="text-yellow-400">
-                          Votes:
-                        </strong>{" "}
-                        {selectedItem.vote_count?.toLocaleString()}
-                      </p>
-
-                      <p>
-                        <strong className="text-yellow-400">
-                          {selectedItem.media_type ===
-                          "movie"
-                            ? "Release Date"
-                            : "First Air Date"}
-                          :
-                        </strong>{" "}
-                        {selectedItem.release_date ||
-                          selectedItem.first_air_date ||
-                          "N/A"}
-                      </p>
-
-                      <p>
-                        <strong className="text-yellow-400">
-                          Genres:
-                        </strong>{" "}
-                        {selectedItem.genres
-                          ?.map((g) => g.name)
-                          .join(", ") ||
-                          "N/A"}
-                      </p>
-
-                      <p>
-                        <strong className="text-yellow-400">
-                          Language:
-                        </strong>{" "}
-                        {selectedItem.original_language?.toUpperCase()}
-                      </p>
-
-                    </div>
-                  </div>
-                </div>
-
-                {/* Cast */}
-                {selectedItem.credits?.cast
-                  ?.length > 0 && (
-
-                  <div className="mb-10">
-
-                    <h3 className="text-2xl font-bold text-yellow-400 mb-4">
-                      Top Cast
-                    </h3>
-
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-
-                      {selectedItem.credits.cast
-                        .slice(0, 6)
-                        .map((actor) => (
-                          <li
-                            key={actor.id}
-                            className="text-gray-300"
-                          >
-                            <span className="text-white font-semibold">
-                              {actor.name}
-                            </span>{" "}
-                            as{" "}
-                            <em className="text-yellow-400">
-                              {actor.character}
-                            </em>
-                          </li>
-                        ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Trailer */}
-                {trailer && (
-
-                  <div className="mb-10">
-
-                    <h3 className="text-2xl font-bold text-yellow-400 mb-4">
-                      Trailer
-                    </h3>
-
-                    <div
-                      className="relative w-full"
-                      style={{
-                        paddingBottom:
-                          "56.25%",
-                      }}
-                    >
-                      <iframe
-                        className="absolute top-0 left-0 w-full h-full rounded-xl"
-                        src={`https://www.youtube.com/embed/${trailer.key}`}
-                        title="Trailer"
-                        allowFullScreen
-                      />
-                    </div>
-                  </div>
-                )}
-
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Grid */}
         {!loading &&
           items.length > 0 && (
@@ -336,38 +128,38 @@ const Drama = () => {
                     <div
                       key={item.id}
                       onClick={() =>
-                        fetchDetails(
-                          item.id
-                        )
+                        handleItemClick(item.id)
                       }
-                      className="cursor-pointer transform transition-transform hover:scale-105"
+                      className="cursor-pointer transform transition-all hover:scale-105 group rounded-xl overflow-hidden"
                     >
 
-                      <div className="relative group">
+                      <div className="relative">
 
-                        <div className="absolute top-2 left-2 z-10 bg-yellow-400 text-black font-bold px-3 py-1 rounded-full shadow-lg">
-                          #{index + 1}
-                        </div>
+                        <div className="relative h-64 md:h-72 overflow-hidden rounded-xl">
+                          <img
+                            src={
+                              item.poster_path
+                                ? `${IMG_URL}${item.poster_path}`
+                                : "/no-image.png"
+                            }
+                            alt={
+                              item.title ||
+                              item.name
+                            }
+                            className="w-full h-full object-cover group-hover:brightness-75 transition-all shadow-lg"
+                          />
 
-                        <img
-                          src={
-                            item.poster_path
-                              ? `${IMG_URL}${item.poster_path}`
-                              : "/no-image.png"
-                          }
-                          alt={
-                            item.title ||
-                            item.name
-                          }
-                          className="w-full rounded-xl shadow-lg group-hover:shadow-2xl transition-shadow"
-                        />
+                          <div className="absolute top-2 left-2 z-10 bg-yellow-400 text-black font-bold px-3 py-1 rounded-full shadow-lg">
+                            #{index + 1}
+                          </div>
 
-                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-70 transition-all rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100">
+                          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
 
-                          <p className="text-white font-semibold">
-                            View Details
-                          </p>
+                            <p className="text-white font-semibold text-lg">
+                              View Details
+                            </p>
 
+                          </div>
                         </div>
                       </div>
 
@@ -398,7 +190,7 @@ const Drama = () => {
                     )
                   }
                   disabled={page === 1}
-                  className="px-6 py-2 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-500 transition-colors disabled:opacity-50"
+                  className="px-6 py-2 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   ← Previous
                 </button>
@@ -422,7 +214,7 @@ const Drama = () => {
                   disabled={
                     page === totalPages
                   }
-                  className="px-6 py-2 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-500 transition-colors disabled:opacity-50"
+                  className="px-6 py-2 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Next →
                 </button>

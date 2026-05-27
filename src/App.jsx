@@ -7,6 +7,7 @@ import SearchPage from './pages/SearchPage'
 import Home from './pages/Home'
 import About from './pages/About'
 import Footer from './pages/Footer'
+import MediaDetailsPage from './pages/MediaDetailsPage'
 import TopRated from './components/TopRated'
 import Action from './components/Action'
 import Drama from './components/Drama'
@@ -22,11 +23,9 @@ function App() {
           <Route path="/search/:query" element={<SearchPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/topRated" element={<TopRated />} />
-
-          <Route path="category">
-     <Route path="/category/action" element={<Action />} />
-     <Route path="/category/drama" element={<Drama/>} />
-</Route>
+          <Route path="/category/action" element={<Action />} />
+          <Route path="/category/drama" element={<Drama/>} />
+          <Route path="/media/:type/:id" element={<MediaDetailsPage />} />
 
         </Routes>
       </main>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading";
 
@@ -11,13 +12,13 @@ const ACTION_TV_GENRE_ID = 10759;
 const LIMIT = 10;
 
 const Action = () => {
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [mediaType, setMediaType] = useState("movie");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
     fetchAction();
@@ -26,7 +27,6 @@ const Action = () => {
   const fetchAction = async () => {
     setLoading(true);
     setError("");
-    setSelectedItem(null);
 
     try {
       const genreId =
@@ -55,37 +55,9 @@ const Action = () => {
     }
   };
 
-  const fetchDetails = async (id) => {
-    setLoading(true);
-
-    try {
-      const res = await axios.get(
-        `${BASE_URL}/${mediaType}/${id}`,
-        {
-          params: {
-            api_key: API_KEY,
-            append_to_response:
-              "credits,videos,similar",
-          },
-        }
-      );
-
-      setSelectedItem({
-        ...res.data,
-        media_type: mediaType,
-      });
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+  const handleItemClick = (id) => {
+    navigate(`/media/${mediaType}/${id}`);
   };
-
-  const trailer = selectedItem?.videos?.results?.find(
-    (v) =>
-      v.type === "Trailer" &&
-      v.site === "YouTube"
-  );
 
   return (
     <div className="min-h-screen bg-gray-900 py-12">
@@ -154,25 +126,30 @@ const Action = () => {
 
                 <div
                   key={item.id}
-                  onClick={() => fetchDetails(item.id)}
-                  className="cursor-pointer transform transition-transform hover:scale-105"
+                  onClick={() => handleItemClick(item.id)}
+                  className="cursor-pointer transform transition-all hover:scale-105 group rounded-xl overflow-hidden"
                 >
 
-                  <div className="relative group">
+                  <div className="relative">
 
                     <div className="absolute top-2 left-2 z-10 bg-yellow-400 text-black font-bold px-3 py-1 rounded-full shadow-lg">
                       #{index + 1}
                     </div>
 
-                    <img
-                      src={
-                        item.poster_path
-                          ? `${IMG_URL}${item.poster_path}`
-                          : "/no-image.png"
-                      }
-                      alt={item.title || item.name}
-                      className="w-full rounded-xl shadow-lg group-hover:shadow-2xl transition-shadow"
-                    />
+                    <div className="relative h-64 md:h-72 overflow-hidden rounded-xl">
+                      <img
+                        src={
+                          item.poster_path
+                            ? `${IMG_URL}${item.poster_path}`
+                            : "/no-image.png"
+                        }
+                        alt={item.title || item.name}
+                        className="w-full h-full object-cover group-hover:brightness-75 transition-all shadow-lg"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <p className="text-white font-bold text-lg">View Details</p>
+                      </div>
+                    </div>
 
                   </div>
 
@@ -195,7 +172,7 @@ const Action = () => {
                   setPage((p) => Math.max(p - 1, 1))
                 }
                 disabled={page === 1}
-                className="px-6 py-2 bg-yellow-400 text-black font-semibold rounded-lg"
+                className="px-6 py-2 bg-yellow-400 text-black font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-yellow-500 transition"
               >
                 ← Previous
               </button>
@@ -211,7 +188,7 @@ const Action = () => {
                   )
                 }
                 disabled={page === totalPages}
-                className="px-6 py-2 bg-yellow-400 text-black font-semibold rounded-lg"
+                className="px-6 py-2 bg-yellow-400 text-black font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-yellow-500 transition"
               >
                 Next →
               </button>
